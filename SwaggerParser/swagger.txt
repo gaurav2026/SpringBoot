@@ -1,0 +1,162 @@
+swagger: '2.0'
+info:
+  version: 1.8.0
+  title: Swagger Star Alliance Baggage service
+  description: The purpose of this feature is to retrieve baggage information available.
+  contact:
+    name: Star Alliance API team
+    email: contact@staralliance.com
+    url: 'https://staralliance.com'
+host: staralliance-nonprod-qa.apigee.net
+basePath: /api/baggage/v2
+schemes:
+  - https
+produces:
+  - application/json
+  - application/xml
+paths:
+  /bagJourney:
+    get:
+      description: Returns information about baggages
+      operationId: search
+      produces:
+        - application/json
+      parameters:
+        - name: bagTagNumber
+          in: query
+          description: bagTagNumber (required only if trackingId not given)
+          required: true
+          type: string
+        - name: outboundDate
+          in: query
+          description: >-
+            Departure date Format:YYYY-MM-DD (required only if trackingId not
+            given)
+          required: true
+          type: string
+        - name: userCarrier
+          in: query
+          description: Carrier code
+          required: false
+          type: string
+        - name: trackingId
+          in: query
+          description: >-
+            trackingId (required only if the bagTagNumbers and the outboundDate
+            not given)
+          required: true
+          type: string
+        - name: paxName
+          in: query
+          description: Customer's name (required only if trackingId not given)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Baggage information
+          schema:
+            type: object
+            $ref: '#/definitions/baggage'
+        '400':
+          description: Bad request
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/errorModel'
+        '401':
+          description: Unauthorized
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/errorModel'
+        '404':
+          description: Not Found
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/errorModel'
+        '500':
+          description: Internal server error
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/errorModel'
+        '503':
+          description: Gateway timeout.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/errorModel'
+        '504':
+          description: Service unavailable.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/errorModel'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+definitions:
+  baggage:
+    type: object
+    required: 
+      - bagTagNumber
+      - trackingId
+      - flights
+    properties:
+      bagTagNumber:
+        type: string
+      trackingId:
+        type: string
+      flights:
+        type: array
+        items:
+          $ref: '#/definitions/flight'
+  flight:
+    type: object
+    required:
+      - flightNumber
+      - flightStatus
+      - flightDate
+      - flightUTCDate
+      - departureAirport
+      - arrivalAirport
+    properties:
+      flightNumber:
+        type: string
+      flightStatus:
+        type: string
+      flightDate:
+        type: string
+      flightUTCDate:
+        type: string
+      departureAirport:
+        type: string
+      arrivalAirport:
+        type: string
+      departureAirportBaggageStatus:
+        type: string
+      departureAirportBaggageStatusDescription:
+        type: string
+      arrivalAirportBaggageStatus:
+        type: string
+      arrivalAirportBaggageStatusDescription:
+        type: string
+      baggageStatusChangeUTCDate:
+        type: string
+  errorModel:
+    type: object
+    required:
+      - status
+      - code
+      - message
+    properties:
+      status:
+        type: integer
+        format: int32
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string

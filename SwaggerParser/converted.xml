@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<application xmlns="http://wadl.dev.java.net/2009/02">
+    <doc title="Swagger Star Alliance Baggage service" xml:lang="en">The purpose of this feature is to retrieve baggage information available.</doc>
+    <grammars>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://amadeus.com" targetNamespace="http://amadeus.com">
+            <xs:complexType name="baggage">
+                <xs:sequence>
+                    <xs:element minOccurs="1" name="bagTagNumber" type="xs:string"/>
+                    <xs:element minOccurs="1" name="trackingId" type="xs:string"/>
+                    <xs:element minOccurs="1" name="flights">
+                        <xs:element name="flights" type="flight"/>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="flight">
+                <xs:sequence>
+                    <xs:element minOccurs="1" name="flightNumber" type="xs:string"/>
+                    <xs:element minOccurs="1" name="flightStatus" type="xs:string"/>
+                    <xs:element minOccurs="1" name="flightDate" type="xs:string"/>
+                    <xs:element minOccurs="1" name="flightUTCDate" type="xs:string"/>
+                    <xs:element minOccurs="1" name="departureAirport" type="xs:string"/>
+                    <xs:element minOccurs="1" name="arrivalAirport" type="xs:string"/>
+                    <xs:element name="departureAirportBaggageStatus" type="xs:string"/>
+                    <xs:element name="departureAirportBaggageStatusDescription" type="xs:string"/>
+                    <xs:element name="arrivalAirportBaggageStatus" type="xs:string"/>
+                    <xs:element name="arrivalAirportBaggageStatusDescription" type="xs:string"/>
+                    <xs:element name="baggageStatusChangeUTCDate" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="errorModel">
+                <xs:sequence>
+                    <xs:element minOccurs="1" name="status" type="xs:integer"/>
+                    <xs:element minOccurs="1" name="code" type="xs:integer"/>
+                    <xs:element minOccurs="1" name="message" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </grammars>
+    <resources>
+        <resource id="_bagJourney" path="/bagJourney">
+            <method id="search" name="GET">
+                <doc title="search" xml:lang="en"/>
+                <request>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="bagTagNumber" type="" required="true">
+                        <ns2:doc title="bagTagNumber" xml:lang="en">bagTagNumber (required only if trackingId not given)</ns2:doc>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="outboundDate" type="" required="true">
+                        <ns2:doc title="outboundDate" xml:lang="en">Departure date Format:YYYY-MM-DD (required only if trackingId not given)</ns2:doc>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="userCarrier" type="" required="false">
+                        <ns2:doc title="userCarrier" xml:lang="en">Carrier code</ns2:doc>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="trackingId" type="" required="true">
+                        <ns2:doc title="trackingId" xml:lang="en">trackingId (required only if the bagTagNumbers and the outboundDate not given)</ns2:doc>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="paxName" type="" required="true">
+                        <ns2:doc title="paxName" xml:lang="en">Customer's name (required only if trackingId not given)</ns2:doc>
+                    </ns2:element>
+                </request>
+                <response>
+                    <doc title="200" xml:lang="en">Baggage information</doc>
+                    <doc title="400" xml:lang="en">Bad request</doc>
+                    <doc title="401" xml:lang="en">Unauthorized</doc>
+                    <doc title="404" xml:lang="en">Not Found</doc>
+                    <doc title="500" xml:lang="en">Internal server error</doc>
+                    <doc title="503" xml:lang="en">Gateway timeout.</doc>
+                    <doc title="504" xml:lang="en">Service unavailable.</doc>
+                    <doc title="default" xml:lang="en">unexpected error</doc>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" element="tns:/bagJourney" mediaType="application/json"/>
+                </response>
+            </method>
+        </resource>
+    </resources>
+</application>

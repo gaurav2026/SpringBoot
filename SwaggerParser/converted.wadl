@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<application xmlns="http://wadl.dev.java.net/2009/02">
+    <doc title="User Data Hub REST API" xml:lang="english">REST API to access the LH Group User Data Hub</doc>
+    <grammars>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://amadeus.com" targetNamespace="http://amadeus.com">
+            <xs:complexType name="ValidateLoginResponse">
+                <xs:sequence>
+                    <xs:element name="errorCode" type="xs:string"/>
+                    <xs:element name="errorMessage" type="xs:string"/>
+                    <xs:element name="success" type="xs:boolean"/>
+                    <xs:element name="ucid" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="GetLinkStateResponse">
+                <xs:sequence>
+                    <xs:element name="correlationID" type="xs:string"/>
+                    <xs:element name="errors">
+                        <xs:element name="errors" type="MessageObject"/>
+                    </xs:element>
+                    <xs:element name="informations">
+                        <xs:element name="informations" type="MessageObject"/>
+                    </xs:element>
+                    <xs:element name="linkState" type="xs:string">
+                        <xs:simpleType>
+                            <xs:restriction>
+<xs:enumeration values="LINKED"/>
+<xs:enumeration values="UNLINKED"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="successFlag" type="xs:boolean"/>
+                    <xs:element name="udhEnvironment" type="xs:string"/>
+                    <xs:element name="udhVersion" type="xs:string"/>
+                    <xs:element name="warnings">
+                        <xs:element name="warnings" type="MessageObject"/>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="LinkRequest">
+                <xs:sequence>
+                    <xs:element name="authorizationCode" type="xs:string"/>
+                    <xs:element name="redirectUrl" type="xs:string"/>
+                    <xs:element name="thirdPartyIdProvider" type="xs:string"/>
+                    <xs:element name="ucid" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="UnlinkProfileResponse">
+                <xs:sequence>
+                    <xs:element name="correlationID" type="xs:string"/>
+                    <xs:element name="errors">
+                        <xs:element name="errors" type="MessageObject"/>
+                    </xs:element>
+                    <xs:element name="informations">
+                        <xs:element name="informations" type="MessageObject"/>
+                    </xs:element>
+                    <xs:element name="successFlag" type="xs:boolean"/>
+                    <xs:element name="udhEnvironment" type="xs:string"/>
+                    <xs:element name="udhVersion" type="xs:string"/>
+                    <xs:element name="warnings">
+                        <xs:element name="warnings" type="MessageObject"/>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="MessageObject">
+                <xs:sequence>
+                    <xs:element name="category" type="xs:string">
+                        <xs:simpleType>
+                            <xs:restriction>
+<xs:enumeration values="TECHNICAL"/>
+<xs:enumeration values="FUNCTIONAL"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="code" type="xs:string"/>
+                    <xs:element name="fields">
+                        <xs:element name="fields" type="xs:string"/>
+                    </xs:element>
+                    <xs:element name="message" type="xs:string"/>
+                    <xs:element name="parameters">
+                        <xs:element name="parameters" type="xs:string"/>
+                    </xs:element>
+                    <xs:element name="subsystem" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="LoginLinkedProfileResponse">
+                <xs:sequence>
+                    <xs:element name="correlationID" type="xs:string"/>
+                    <xs:element name="errors">
+                        <xs:element name="errors" type="MessageObject"/>
+                    </xs:element>
+                    <xs:element name="informations">
+                        <xs:element name="informations" type="MessageObject"/>
+                    </xs:element>
+                    <xs:element name="successFlag" type="xs:boolean"/>
+                    <xs:element name="ucid" type="xs:string"/>
+                    <xs:element name="udhEnvironment" type="xs:string"/>
+                    <xs:element name="udhVersion" type="xs:string"/>
+                    <xs:element name="warnings">
+                        <xs:element name="warnings" type="MessageObject"/>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="BaseThirdPartyIdResponse">
+                <xs:sequence>
+                    <xs:element name="errorCode" type="xs:string"/>
+                    <xs:element name="errorMessage" type="xs:string"/>
+                    <xs:element name="success" type="xs:boolean"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="LinkProfileResponse">
+                <xs:sequence>
+                    <xs:element name="correlationID" type="xs:string"/>
+                    <xs:element name="errors">
+                        <xs:element name="errors" type="MessageObject"/>
+                    </xs:element>
+                    <xs:element name="informations">
+                        <xs:element name="informations" type="MessageObject"/>
+                    </xs:element>
+                    <xs:element name="successFlag" type="xs:boolean"/>
+                    <xs:element name="udhEnvironment" type="xs:string"/>
+                    <xs:element name="udhVersion" type="xs:string"/>
+                    <xs:element name="warnings">
+                        <xs:element name="warnings" type="MessageObject"/>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </grammars>
+    <resources base="http://localhost:8080/">
+        <resource id="_rest_thirdpartyid_" path="/rest/thirdpartyid/">
+            <method id="validateLoginUsingGET" name="GET">
+                <doc title="validateLoginUsingGET" xml:lang="english">Validates provided authorization code and redirect URL with 3rd party id provider. UCID is returned in case of successful validation</doc>
+                <request>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-tenant" style="header" type="" required="true">
+                        <ns2:doc title="udh-common-tenant" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-originating-system" style="header" type="" required="true">
+                        <ns2:doc title="udh-common-originating-system" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-clientip" style="header" type="" required="false">
+                        <ns2:doc title="udh-common-clientip" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-correlationid" style="header" type="" required="false">
+                        <ns2:doc title="udh-common-correlationid" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-ssotoken" style="header" type="" required="false">
+                        <ns2:doc title="udh-common-ssotoken" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-ssotokenid" style="header" type="" required="false">
+                        <ns2:doc title="udh-common-ssotokenid" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-security-desmon-cert" style="header" type="" required="true">
+                        <ns2:doc title="udh-security-desmon-cert" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="X-Mashery-OAuth-User-Context" style="header" type="" required="false">
+                        <ns2:doc title="X-Mashery-OAuth-User-Context" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="thirdPartyIdProvider" style="query" type="" required="true">
+                        <ns2:doc title="thirdPartyIdProvider" xml:lang="english">thirdPartyIdProvider</ns2:doc>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="authorizationCode" style="query" type="" required="true">
+                        <ns2:doc title="authorizationCode" xml:lang="english">authorizationCode</ns2:doc>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="redirectUrl" style="query" type="" required="true">
+                        <ns2:doc title="redirectUrl" xml:lang="english">redirectUrl</ns2:doc>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" element="tns:/rest/thirdpartyid/" mediaType="application/json"/>
+                </request>
+                <response>
+                    <doc title="200" xml:lang="english">Successfully validated</doc>
+                    <doc title="401" xml:lang="english">Unauthorized</doc>
+                    <doc title="403" xml:lang="english">Forbidden</doc>
+                    <doc title="404" xml:lang="english">Validation failed</doc>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" element="tns:/rest/thirdpartyid/" mediaType="*/*"/>
+                </response>
+            </method>
+            <method id="linkUsingPOST" name="POST">
+                <doc title="linkUsingPOST" xml:lang="english">Links the internal profile identified by UCID with 3rd party id identified byautorization code and redirect url</doc>
+                <request>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-tenant" style="header" type="" required="true">
+                        <ns2:doc title="udh-common-tenant" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-originating-system" style="header" type="" required="true">
+                        <ns2:doc title="udh-common-originating-system" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-clientip" style="header" type="" required="false">
+                        <ns2:doc title="udh-common-clientip" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-correlationid" style="header" type="" required="false">
+                        <ns2:doc title="udh-common-correlationid" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-ssotoken" style="header" type="" required="false">
+                        <ns2:doc title="udh-common-ssotoken" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-ssotokenid" style="header" type="" required="false">
+                        <ns2:doc title="udh-common-ssotokenid" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-security-desmon-cert" style="header" type="" required="true">
+                        <ns2:doc title="udh-security-desmon-cert" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="X-Mashery-OAuth-User-Context" style="header" type="" required="false">
+                        <ns2:doc title="X-Mashery-OAuth-User-Context" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="request" type="" required="true">
+                        <ns2:doc title="request" xml:lang="english">request</ns2:doc>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" element="tns:/rest/thirdpartyid/" mediaType="application/json"/>
+                </request>
+                <response>
+                    <doc title="200" xml:lang="english">Successfully linked</doc>
+                    <doc title="201" xml:lang="english">Created</doc>
+                    <doc title="401" xml:lang="english">Unauthorized</doc>
+                    <doc title="403" xml:lang="english">Forbidden</doc>
+                    <doc title="404" xml:lang="english">Profile linking failed</doc>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" element="tns:/rest/thirdpartyid/" mediaType="*/*"/>
+                </response>
+            </method>
+            <method id="unlinkUsingDELETE" name="DELETE">
+                <doc title="unlinkUsingDELETE" xml:lang="english">Unlinks the profile identified by UCID from 3rd party id</doc>
+                <request>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-tenant" style="header" type="" required="true">
+                        <ns2:doc title="udh-common-tenant" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-originating-system" style="header" type="" required="true">
+                        <ns2:doc title="udh-common-originating-system" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-clientip" style="header" type="" required="false">
+                        <ns2:doc title="udh-common-clientip" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-correlationid" style="header" type="" required="false">
+                        <ns2:doc title="udh-common-correlationid" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-ssotoken" style="header" type="" required="false">
+                        <ns2:doc title="udh-common-ssotoken" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-ssotokenid" style="header" type="" required="false">
+                        <ns2:doc title="udh-common-ssotokenid" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-security-desmon-cert" style="header" type="" required="true">
+                        <ns2:doc title="udh-security-desmon-cert" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="X-Mashery-OAuth-User-Context" style="header" type="" required="false">
+                        <ns2:doc title="X-Mashery-OAuth-User-Context" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="thirdPartyIdProvider" style="query" type="" required="true">
+                        <ns2:doc title="thirdPartyIdProvider" xml:lang="english">thirdPartyIdProvider</ns2:doc>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="ucid" style="query" type="" required="true">
+                        <ns2:doc title="ucid" xml:lang="english">ucid</ns2:doc>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" element="tns:/rest/thirdpartyid/" mediaType="application/json"/>
+                </request>
+                <response>
+                    <doc title="200" xml:lang="english">Successfully unlinked</doc>
+                    <doc title="204" xml:lang="english">No Content</doc>
+                    <doc title="401" xml:lang="english">Unauthorized</doc>
+                    <doc title="403" xml:lang="english">Forbidden</doc>
+                    <doc title="404" xml:lang="english">Unlinking failed</doc>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" element="tns:/rest/thirdpartyid/" mediaType="*/*"/>
+                </response>
+            </method>
+        </resource>
+        <resource id="_rest_thirdpartyid_linkstate_" path="/rest/thirdpartyid/linkstate/">
+            <method id="linkStateUsingGET" name="GET">
+                <doc title="linkStateUsingGET" xml:lang="english">Checks if provided ucid is linked to a profile. LINKED or UNLINKED state is returned based on the status.</doc>
+                <request>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-tenant" style="header" type="" required="true">
+                        <ns2:doc title="udh-common-tenant" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-originating-system" style="header" type="" required="true">
+                        <ns2:doc title="udh-common-originating-system" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-clientip" style="header" type="" required="false">
+                        <ns2:doc title="udh-common-clientip" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-correlationid" style="header" type="" required="false">
+                        <ns2:doc title="udh-common-correlationid" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-ssotoken" style="header" type="" required="false">
+                        <ns2:doc title="udh-common-ssotoken" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-common-ssotokenid" style="header" type="" required="false">
+                        <ns2:doc title="udh-common-ssotokenid" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="udh-security-desmon-cert" style="header" type="" required="true">
+                        <ns2:doc title="udh-security-desmon-cert" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="X-Mashery-OAuth-User-Context" style="header" type="" required="false">
+                        <ns2:doc title="X-Mashery-OAuth-User-Context" xml:lang="english"/>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="thirdPartyIdProvider" style="query" type="" required="true">
+                        <ns2:doc title="thirdPartyIdProvider" xml:lang="english">thirdPartyIdProvider</ns2:doc>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" name="ucid" style="query" type="" required="true">
+                        <ns2:doc title="ucid" xml:lang="english">ucid</ns2:doc>
+                    </ns2:element>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" element="tns:/rest/thirdpartyid/linkstate/" mediaType="application/json"/>
+                </request>
+                <response>
+                    <doc title="200" xml:lang="english">Link state successfuly retrieved.</doc>
+                    <doc title="401" xml:lang="english">Unauthorized</doc>
+                    <doc title="403" xml:lang="english">Forbidden</doc>
+                    <doc title="404" xml:lang="english">Failed to retrieve link state.</doc>
+                    <ns2:element xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" element="tns:/rest/thirdpartyid/linkstate/" mediaType="*/*"/>
+                </response>
+            </method>
+        </resource>
+    </resources>
+</application>
